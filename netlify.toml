@@ -10,13 +10,5 @@
   to = "/index.html"
   status = 200
 
-[context.production.environment]
-  VITE_API_URL = "https://your-backend-domain.onrender.com"
-  VITE_RAZORPAY_KEY_ID = "rzp_test_your_actual_key"
-  VITE_SKIP_RAZORPAY = "false"
-  VITE_FORCE_MOCK_PAYMENT = "false"
-
-[context.deploy-preview.environment]
-  VITE_API_URL = "http://localhost:8000"
-  VITE_SKIP_RAZORPAY = "true"
-  VITE_FORCE_MOCK_PAYMENT = "true"
+# Note: Set VITE_API_URL in Netlify dashboard environment variables
+# Don't hardcode URLs here - use Netlify's environment variables instead
