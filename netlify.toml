@@ -11,7 +11,8 @@
   status = 200
 
 [context.production.environment]
-  VITE_API_URL = "cinebook-6ys5-t4me5ods4-aflahs-projects-f84feba8.vercel.app"
+  VITE_API_URL = "https://your-backend-domain.onrender.com"
+  VITE_RAZORPAY_KEY_ID = "rzp_test_your_actual_key"
   VITE_SKIP_RAZORPAY = "false"
   VITE_FORCE_MOCK_PAYMENT = "false"
 
