@@ -23,21 +23,21 @@ const Register = ({ role = "user" }) => {
   const user = {
     role: "user",
     registerAPI: "user/signup",
-    redirectRoute: "/verify-otp",
+    redirectRoute: "/login", // Direct to login since OTP is skipped
     loginRoute: "/login",
   };
 
   if (role === "theaterOwner") {
     user.role = "theaterOwner";
     user.registerAPI = "admin/signup";
-    user.redirectRoute = "/owner/verify-otp";
+    user.redirectRoute = "/owner/login"; // Direct to login since OTP is skipped
     user.loginRoute = "/owner/login";
   }
 
   if (role === "admin") {
     user.role = "admin";
     user.registerAPI = "admin/signup";
-    user.redirectRoute = "/admin/verify-otp";
+    user.redirectRoute = "/admin/login"; // Direct to login since OTP is skipped
     user.loginRoute = "/admin/login";
   }
 
@@ -51,20 +51,10 @@ const Register = ({ role = "user" }) => {
       setLoading(true);
       const response = await axiosInstance.post(user.registerAPI, payload);
 
-      // Check if OTP was skipped in development
-      if (response.data.message.includes("OTP skipped in development")) {
-        toast.success("Registration successful! You can now login.");
-        navigate(user.loginRoute);
-        return;
-      }
-
-      if (response.data.message.includes("New OTP sent")) {
-        toast.success("Account already exists but unverified. OTP sent!");
-      } else {
-        toast.success(response.data.message || "OTP sent! Please verify.");
-      }
-
-      navigate(`${user.redirectRoute}?email=${email}`);
+      // Since OTP verification is skipped, always redirect to login
+      toast.success("Registration successful! You can now login.");
+      navigate(user.loginRoute);
+      
     } catch (error) {
       const errorMsg = error.response?.data?.message || "Registration failed";
       toast.error(errorMsg);
