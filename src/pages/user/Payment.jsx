@@ -3,6 +3,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axiosInstance from "../../config/axiosInstance.js";
 import { Button } from "../../components/ui/Buttons";
 import toast from "react-hot-toast";
+import { useAuthStore } from "../../store/useAuthStore.js";
 
 // Force cache refresh in development
 if (import.meta.env.VITE_SKIP_RAZORPAY === 'true') {
@@ -19,6 +20,7 @@ const Payment = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { user, isUserAuth } = useAuthStore();
 
   const {
     selectedSeats,
@@ -38,6 +40,14 @@ const Payment = () => {
       navigate(`/user/seat-selection/${showId}`);
     }
 
+    // Debug authentication state
+    console.log('🔍 Payment component - Auth state:', {
+      isUserAuth,
+      hasUser: !!user,
+      userId: user?._id,
+      userEmail: user?.email
+    });
+
     // Force cache refresh in development mode
     if (import.meta.env.VITE_SKIP_RAZORPAY === 'true') {
       console.log('🔄 Development mode active - mock payments enabled');
@@ -47,7 +57,7 @@ const Payment = () => {
         VITE_RAZORPAY_KEY_ID: import.meta.env.VITE_RAZORPAY_KEY_ID
       });
     }
-  }, [selectedSeats, totalPrice, bookingId, navigate, showId]);
+  }, [selectedSeats, totalPrice, bookingId, navigate, showId, isUserAuth, user]);
 
   // Load Razorpay script dynamically (only if not in mock mode)
   const loadRazorpayScript = () => {
