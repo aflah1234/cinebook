@@ -13,12 +13,12 @@ export const useAuthStore = create((set) => ({
       set({ isLoading: true });
       const res = await axiosInstance.get("user/check-user");
       if (res.data) {
-        set({ user: res.data.data, isUserAuth: true, isLoading:false });
+        set({ user: res.data.data, isUserAuth: true, isLoading: false });
       } else {
-        set({ user: null, isUserAuth: false, isLoading:false });
+        set({ user: null, isUserAuth: false, isLoading: false });
       }
     } catch (err) {
-      console.error(err.response?.data?.message || "Failed to fetch user");
+      console.log('❌ User check failed (likely not logged in):', err.response?.data?.message);
       set({ user: null, isUserAuth: false });
     } finally {
       set({ isLoading: false, hasCheckedAuth: true });
@@ -60,21 +60,13 @@ export const useAuthStore = create((set) => ({
   },
 
   login: async (userData, role) => {
+    // Simply set the user as authenticated without making additional API calls
     set({ user: userData, isUserAuth: true, hasCheckedAuth: true });
-    const endPoint =
-      role === "theaterOwner"
-        ? "/admin/check-owner"
-        : role === "admin"
-          ? "/admin/check-admin"
-          : "/user/check-user";
-    try {
-      const res = await axiosInstance.get(endPoint);
-      if (res.data) {
-        set({ user: res.data.data, isUserAuth: true });
-      }
-    } catch (err) {
-      console.error("Error fetching updated user:", err);
-      set({ user: null, isUserAuth: false, hasCheckedAuth: true });
-    }
+    console.log('✅ User logged in and set in store:', userData);
+  },
+
+  logout: () => {
+    set({ user: null, isUserAuth: false, hasCheckedAuth: true });
+    console.log('✅ User logged out and cleared from store');
   },
 }));
